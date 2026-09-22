@@ -1,0 +1,328 @@
+# WhatIsJason — Content Schema
+
+**Version:** 0.1
+Companion to `SPEC.md`.
+
+---
+
+## Repository layout
+
+```
+content/
+  entries/          one .md file per entry, filename = id
+    rag.md
+    kv-cache.md
+  quizzes/
+    questions.yaml       hand-written questions
+  paths/
+    ai-fundamentals.yaml
+  taxonomy.yaml          controlled vocabularies (domains, industries)
+dist/data/               generated, gitignored
+  glossary.json
+  graph.json
+  quiz.json
+  paths.json
+```
+
+---
+
+## 1. Glossary entry
+
+One Markdown file per entry. Structured fields in YAML frontmatter, prose in the body.
+
+### 1.1 Frontmatter
+
+```yaml
+id: kv-cache                    # required, kebab-case, = filename, permanent
+term: KV Cache                  # required, display name
+aliases:                        # optional but strongly encouraged
+  - key-value cache
+  - KV caching
+
+type: technique                 # required — see §1.4
+domains: [inference, performance]   # required, 1-3, from taxonomy.yaml
+industries: [local-llm, infrastructure]  # optional, from taxonomy.yaml
+workflows: [running-a-local-model]       # optional, free-ish but prefer reuse
+
+adoption: established           # required — foundational|established|emerging|experimental
+trend: steady                   # required — rising|steady|cooling
+trendNote: >                    # optional, one line, only if it adds something
+  Increasingly discussed as context windows grow.
+
+summary: >                      # required, ONE sentence, max ~140 chars.
+  Stored intermediate values that let a model generate each new token without
+  recomputing the whole conversation.
+
+relationships:                  # optional but a lone node is a build warning
+  - type: part-of
+    target: transformer-architecture
+  - type: prerequisite-of
+    target: context-window
+    note: Understanding KV cache explains why long contexts cost memory.
+
+videos:                         # optional
+  - id: dQw4w9WgXcQ             # YouTube video ID only
+    title: How KV Caching Works
+    channel: IBM Technology
+    verified: 2026-09-15        # date YOU last confirmed it plays
+
+diagram: kv-cache.svg           # optional, path in assets/diagrams/
+
+sources:                        # optional, for your own maintenance
+  - https://example.com/paper
+
+added: 2026-09-22               # required, set once, never changed
+lastReviewed: 2026-09-22        # required, bump on every meaningful edit
+```
+
+### 1.2 Body
+
+Three fenced sections, parsed by heading. All Markdown.
+
+```markdown
+## Plain
+
+What it is with no jargon at all. If a technical term is unavoidable,
+link it: see [[context-window]].
+
+Two to four short paragraphs. Assume zero background.
+
+## Technical
+
+The precise version. Assume the reader knows the foundational terms.
+Maths, mechanisms, trade-offs, gotchas.
+
+## Examples
+
+- Concrete example one
+- Concrete example two
+```
+
+`[[entry-id]]` is wiki-link syntax resolved at build time to an internal link. The build **fails** on a link to a non-existent ID — this is what keeps the graph honest as it grows.
+
+### 1.3 Required vs optional
+
+| Field | Required | Notes |
+|---|---|---|
+| `id`, `term`, `type`, `domains` | yes | |
+| `adoption`, `trend` | yes | |
+| `summary` | yes | Used in search results, map panel, quiz clues |
+| `added`, `lastReviewed` | yes | |
+| Body `## Plain`, `## Technical` | yes | Both. This is the core promise of the site. |
+| `aliases`, `relationships`, `videos` | no | But build *warns* if relationships is empty |
+| everything else | no | |
+
+### 1.4 Controlled vocabulary: `type`
+
+| Value | Means | Example |
+|---|---|---|
+| `concept` | An idea or property | Hallucination, Alignment |
+| `technique` | A method or approach | RAG, Fine-tuning, Quantisation |
+| `technology` | A concrete thing that exists | Transformer, Vector Database |
+| `system` | A deployed product or model family | GPT, LLaMA, Claude |
+| `workflow` | A repeatable process | Prompt engineering, Evaluation |
+| `parameter` | A tunable knob | Temperature, Top-p, Context window |
+
+`parameter` exists specifically to cluster the local-LLM practical terms, which behave differently from concepts and deserve their own visual treatment.
+
+### 1.5 Controlled vocabulary: `adoption`
+
+| Value | Means |
+|---|---|
+| `foundational` | You cannot understand the field without this |
+| `established` | Widely used, stable meaning, safe to learn |
+| `emerging` | Real and gaining traction, meaning still settling |
+| `experimental` | Research-stage or heavily hyped, may not last |
+
+### 1.6 `domains` — defined in `taxonomy.yaml`
+
+Starting set (colour anchors for the mind map):
+
+`fundamentals`, `architecture`, `training`, `inference`, `performance`, `data`, `agents`, `safety`, `evaluation`, `tooling`
+
+Keep this list short. Every domain is a colour on the map, and past ~10 colours become indistinguishable.
+
+---
+
+## 2. Relationships
+
+### 2.1 Types
+
+| Type | Direction | Displayed on source as | Displayed on target as |
+|---|---|---|---|
+| `prerequisite-of` | A → B | "Leads to" | "Learn first" |
+| `part-of` | A → B | "Part of" | "Components" |
+| `alternative-to` | symmetric | "Alternatives" | "Alternatives" |
+| `used-in` | A → B | "Used in" | "Uses" |
+| `implemented-by` | A → B | "Implementations" | "Implements" |
+
+### 2.2 Authoring rules
+
+- Declare each edge **once**, on whichever entry it reads most naturally from. The build generates the inverse.
+- `alternative-to` is symmetric — declaring it twice is a build warning, not an error, and the duplicate is silently merged.
+- `prerequisite-of` must form a **DAG**. A cycle fails the build, because it would make learning paths impossible and the graph nonsensical.
+- Optional `note` on any edge, shown as a tooltip.
+
+### 2.3 Generated graph file
+
+`graph.json` contains resolved bidirectional edges plus computed properties the app shouldn't recalculate at runtime: node degree, domain cluster membership, and prerequisite depth (used to order learning paths and sanity-check them).
+
+---
+
+## 3. Quiz questions
+
+### 3.1 Hand-written (`content/quizzes/questions.yaml`)
+
+```yaml
+- id: q-temperature-01
+  entry: temperature              # required — drives clue + category
+  difficulty: 1                   # 1 beginner, 2 intermediate, 3 advanced
+  kind: definition                # definition|application|relationship|distinction
+  prompt: What does raising the temperature setting do to a model's output?
+  options:
+    - text: Makes it more varied and less predictable
+      correct: true
+    - text: Makes it respond faster
+    - text: Increases the maximum response length
+    - text: Improves factual accuracy
+  explanation: >
+    Temperature scales the probability distribution over next tokens. Higher
+    values flatten it, so less-likely tokens get picked more often.
+```
+
+- `entry` provides the **clue** (that entry's `summary` plus a link) and determines which category the question belongs to (via the entry's first domain).
+- Exactly one option has `correct: true`. Build fails otherwise.
+- `explanation` is required and shown after answering regardless of outcome.
+
+### 3.2 Generated
+
+Produced at build time from the graph. Not stored in source. Templates:
+
+| Template | Source edge | Example |
+|---|---|---|
+| Prerequisite | `prerequisite-of` | "Which should you understand before X?" |
+| Component | `part-of` | "Which of these is part of X?" |
+| Alternative | `alternative-to` | "X is an alternative approach to which?" |
+| Domain | `domains` | "Which domain does X primarily belong to?" |
+
+**Distractor selection:** sample from entries sharing a domain with the correct answer but having **no** edge of the queried type to the subject. Near-miss distractors are the ones that teach; random ones are free points.
+
+Generated questions carry `generated: true` in `quiz.json` so quality complaints are traceable, and a generation rule can be disabled without touching hand-written content.
+
+**Suppression:** an entry can set `noGeneratedQuestions: true` in frontmatter where templates would produce nonsense.
+
+### 3.3 Answer outcomes
+
+Three, not two:
+
+| Outcome | Counts as | Review interval |
+|---|---|---|
+| `correct` | correct | Long, or drops from queue after 2 consecutive |
+| `incorrect` | incorrect | Medium — the concept is known but confused |
+| `skipped` | **neither** | Short — this is a gap, resurface sooner |
+
+Accuracy is reported as `correct / (correct + incorrect)`. Skipped questions are reported separately as "gaps". This distinction is the whole reason the pass option exists — collapsing it into "wrong" would destroy the signal.
+
+---
+
+## 4. Learning paths
+
+```yaml
+id: running-a-local-llm
+title: Running an LLM locally
+description: >
+  What you need to know to run a model on your own machine and tune it sensibly.
+audience: practical              # beginner|practical|technical|decision-maker
+estimatedMinutes: 45
+steps:
+  - entry: parameters
+  - entry: quantisation
+    note: The single biggest factor in whether a model fits your VRAM.
+  - entry: context-window
+  - entry: kv-cache
+  - entry: temperature
+  - checkpoint: quiz             # optional, quizzes on entries covered so far
+    category: inference
+```
+
+Build validates that every step's `prerequisite-of` ancestors appear earlier in the path or are explicitly waived with `assumesKnown: [id]`.
+
+---
+
+## 5. Firestore — user data
+
+Only user-specific data lives here. No content.
+
+```
+users/{uid}
+  email, displayName, createdAt, lastSeenAt
+  prefs: { depth: "plain"|"technical", theme, reducedMotion }
+
+users/{uid}/attempts/{attemptId}
+  category          "all" | domain id
+  startedAt, completedAt
+  questionCount
+  correct, incorrect, skipped
+  answers: [ { questionId, outcome, timeMs } ]
+
+users/{uid}/review/{questionId}
+  outcome           last outcome
+  dueAt             next surface time
+  streak            consecutive correct
+  lastSeenAt
+
+users/{uid}/paths/{pathId}
+  startedAt, completedStepIndex, completedAt
+
+allowlist/{email}           read-only to clients
+  addedAt, addedBy
+```
+
+### 5.1 Security rules — intent
+
+- A user reads and writes **only** documents under their own `users/{uid}`.
+- `allowlist` is readable by authenticated users, writable only from the console.
+- No client can write anything outside its own subtree.
+- Collections are namespaced so the Global Market Intelligence app and this app cannot reach each other's data.
+
+### 5.2 Attempt history
+
+Keep the **last 5 completed attempts per category** for comparison, plus a lifetime rolling summary (total attempts, best score, first/last attempt dates). Prune older attempt documents on write to keep document counts bounded.
+
+---
+
+## 6. Generated index shape
+
+`glossary.json`:
+
+```json
+{
+  "buildTime": "2026-09-22T14:03:00Z",
+  "entryCount": 80,
+  "entries": [ { "...resolved entry, relationships bidirectional, wiki-links resolved..." } ],
+  "taxonomy": { "domains": [], "types": [], "industries": [] }
+}
+```
+
+`buildTime` is the source of the footer "Database last updated" stamp. Rendered in the **user's local timezone**, never in UTC, never in a fixed timezone.
+
+---
+
+## 7. Validation rules — build behaviour
+
+**Fail the build:**
+- Missing required field
+- Duplicate `id`, or an alias colliding with another entry's `id` or alias
+- Relationship or `[[wiki-link]]` pointing at a non-existent `id`
+- Cycle in `prerequisite-of`
+- Quiz question referencing a non-existent entry
+- Hand-written question without exactly one correct option
+- `domain`, `type`, `adoption` or `trend` value outside its controlled vocabulary
+
+**Warn:**
+- Entry with no relationships
+- `lastReviewed` older than 6 months
+- Video `verified` older than 12 months
+- Entry with no video and no diagram
+- Domain with fewer than 3 entries (weak cluster — the map will look odd)
+- `plain` section containing an unlinked term that matches another entry's name (a missed cross-link)
