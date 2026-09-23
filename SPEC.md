@@ -59,7 +59,7 @@ GitHub Actions on push to `main`:
 1. Parse all `content/entries/*.md` → validate against schema.
 2. **Fail the build** on: unknown relationship target, duplicate ID or alias, missing required field, quiz question referencing a non-existent entry.
 3. **Warn** on: entry with `lastReviewed` older than 6 months, entry with zero relationships, video with `verified` older than 12 months.
-4. Emit `dist/data/glossary.json`, `dist/data/quiz.json`, `dist/data/paths.json`, `dist/data/graph.json`.
+4. Emit `glossary.json`, `quiz.json`, `paths.json` and `graph.json` to `public/data/`. Vite copies them to `dist/data/`.
 5. Stamp `buildTime` (UTC ISO 8601) into the index.
 6. Deploy to Pages.
 
@@ -73,7 +73,7 @@ Static hosting has no server-side routing. Use a `404.html` fallback that hands 
 
 ### 3.1 One entity, many types
 
-Terms, technologies, workflows and systems are a **single entity type** with a `type` field. "RAG" is arguably all four; forcing a choice at the schema level creates unwinnable arguments. `type` drives filtering and colour-coding, not storage.
+Terms, technologies, workflows and systems are a **single entity type** with a `type` field. "RAG" is arguably all four; forcing a choice at the schema level creates unwinnable arguments. `type` drives filtering and a badge icon, not storage. It is not colour-coded; domain is the only colour channel (see DESIGN.md).
 
 ### 3.2 Typed relationships
 

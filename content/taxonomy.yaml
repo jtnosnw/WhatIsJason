@@ -1,0 +1,25 @@
+# Controlled vocabularies (SCHEMA §1.4–1.6).
+# Domain order is the mind-map ring order and matches the --domain-* tokens in
+# src/styles/tokens.css. Don't reorder without re-validating the palette.
+
+domains:
+  - fundamentals
+  - architecture
+  - training
+  - inference
+  - performance
+  - data
+  - agents
+  - safety
+  - evaluation
+  - tooling
+
+types:
+  - concept
+  - technique
+  - technology
+  - system
+  - workflow
+  - parameter
+
+industries: []

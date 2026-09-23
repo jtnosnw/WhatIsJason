@@ -1,0 +1,187 @@
+/*
+ * WhatIsJason design tokens — the only place raw values may appear.
+ * Components, stylesheets and diagrams reference these via var(--…).
+ * Usage rules live in DESIGN.md.
+ *
+ * Theming: each colour is declared once with light-dark(). The theme follows
+ * the OS via color-scheme; setting data-theme="light" | "dark" on <html>
+ * overrides it in either direction.
+ *
+ * Contrast (WCAG 2.x), verified against --color-bg, --color-surface and
+ * --color-surface-muted in both themes:
+ *   text, text-muted, accent, outcome-*  ≥ 4.5:1 (AA body text)
+ *   border-strong, focus, domain-*       ≥ 3:1   (AA non-text / graphics)
+ */
+
+:root {
+  color-scheme: light dark;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+:root {
+  /* ── Neutrals ─────────────────────────────────────────────── */
+  --color-bg: light-dark(#fafaf8, #141413);             /* page plane */
+  --color-surface: light-dark(#ffffff, #1c1c1a);        /* cards, panels */
+  --color-surface-muted: light-dark(#f2f1ed, #262624);  /* insets, code, hover wash */
+  --color-border: light-dark(#e3e1db, #33322e);         /* decorative hairlines */
+  --color-border-strong: light-dark(#8a867d, #7f7b72);  /* input edges, meaningful dividers */
+
+  --color-text: light-dark(#1b1a18, #ecebe6);
+  --color-text-muted: light-dark(#5a574f, #a9a69d);
+
+  /* ── Interactive ──────────────────────────────────────────── */
+  --color-accent: light-dark(#2f55d4, #8ea7ff);         /* links, primary actions */
+  --color-accent-hover: light-dark(#2444ad, #b0c2ff);
+  --color-on-accent: light-dark(#ffffff, #141413);      /* text on accent fill */
+  --color-focus: var(--color-accent);
+
+  /* ── Quiz outcomes (three, never two) ─────────────────────── */
+  --color-outcome-correct: light-dark(#1d7a36, #6cc885);
+  --color-outcome-correct-bg: light-dark(#e8f3eb, #1b2a1f);
+  --color-outcome-incorrect: light-dark(#b3261e, #ff8a80);
+  --color-outcome-incorrect-bg: light-dark(#fbeae8, #33201e);
+  --color-outcome-skipped: light-dark(#4d5b8c, #a9b6e0);     /* a gap, not an error: calm, not red */
+  --color-outcome-skipped-bg: light-dark(#eceef6, #1f2230);
+
+  /* ── Domains ──────────────────────────────────────────────── */
+  /* Declared in fixed ring order: the mind map lays clusters out in this order, so
+   * neighbours here are neighbours on screen. Validated per theme (OKLab ΔE×100):
+   *   adjacent, normal vision ≥ 20 · adjacent, protan/deutan ≥ 11.5
+   *   all pairs, normal vision ≥ 15.5 light / 13.5 dark
+   * Ten hues can't all be told apart under colour blindness, so a domain colour
+   * always comes with its label. Never use these for text; text uses --color-text.
+   * Do not reorder without re-running validation. */
+  --domain-fundamentals: light-dark(#527fff, #6c8afb);  /* blue */
+  --domain-architecture: light-dark(#ea5106, #ef5702);  /* orange */
+  --domain-training: light-dark(#763da7, #9752b1);      /* violet */
+  --domain-inference: light-dark(#00989e, #1fa6b5);     /* teal */
+  --domain-performance: light-dark(#b31143, #ca3265);   /* crimson */
+  --domain-data: light-dark(#119e13, #35b02b);          /* green */
+  --domain-agents: light-dark(#d35e9e, #ca76a0);        /* pink */
+  --domain-safety: light-dark(#a48725, #ac9305);        /* ochre */
+  --domain-evaluation: light-dark(#04628b, #0d74b2);    /* petrol */
+  --domain-tooling: light-dark(#7c4700, #9f6035);       /* brown */
+
+  /* Tints for badge / cluster backgrounds. Text on a tint uses --color-text. */
+  --domain-tint-strength: 14%;
+  --domain-fundamentals-tint: color-mix(in oklab, var(--domain-fundamentals) var(--domain-tint-strength), var(--color-surface));
+  --domain-architecture-tint: color-mix(in oklab, var(--domain-architecture) var(--domain-tint-strength), var(--color-surface));
+  --domain-training-tint: color-mix(in oklab, var(--domain-training) var(--domain-tint-strength), var(--color-surface));
+  --domain-inference-tint: color-mix(in oklab, var(--domain-inference) var(--domain-tint-strength), var(--color-surface));
+  --domain-performance-tint: color-mix(in oklab, var(--domain-performance) var(--domain-tint-strength), var(--color-surface));
+  --domain-data-tint: color-mix(in oklab, var(--domain-data) var(--domain-tint-strength), var(--color-surface));
+  --domain-agents-tint: color-mix(in oklab, var(--domain-agents) var(--domain-tint-strength), var(--color-surface));
+  --domain-safety-tint: color-mix(in oklab, var(--domain-safety) var(--domain-tint-strength), var(--color-surface));
+  --domain-evaluation-tint: color-mix(in oklab, var(--domain-evaluation) var(--domain-tint-strength), var(--color-surface));
+  --domain-tooling-tint: color-mix(in oklab, var(--domain-tooling) var(--domain-tint-strength), var(--color-surface));
+
+  /* ── Spacing: 4px base ────────────────────────────────────── */
+  --space-0: 0;
+  --space-1: 0.25rem;  /*  4 */
+  --space-2: 0.5rem;   /*  8 */
+  --space-3: 0.75rem;  /* 12 */
+  --space-4: 1rem;     /* 16 */
+  --space-5: 1.5rem;   /* 24 */
+  --space-6: 2rem;     /* 32 */
+  --space-7: 3rem;     /* 48 */
+  --space-8: 4rem;     /* 64 */
+  --space-9: 6rem;     /* 96 */
+
+  /* Semantic spacing: changes with viewport (see density below) */
+  --gutter: var(--space-4);          /* page side padding */
+  --stack-gap: var(--space-5);       /* between sibling blocks */
+  --section-gap: var(--space-7);     /* between page sections */
+  --control-pad-y: var(--space-2);
+  --control-pad-x: var(--space-3);
+  --tap-target: 2.75rem;             /* 44px minimum hit area */
+  --measure: 68ch;                   /* max line length for prose */
+  --page-max: 72rem;
+
+  /* ── Type ─────────────────────────────────────────────────── */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+
+  --text-xs: 0.75rem;     /* 12: meta, legends */
+  --text-sm: 0.875rem;    /* 14: badges, captions */
+  --text-base: 1rem;      /* 16: body */
+  --text-md: 1.125rem;    /* 18: lead paragraph */
+  --text-lg: 1.375rem;    /* 22: h3 */
+  --text-xl: 1.75rem;     /* 28: h2 */
+  --text-2xl: clamp(1.875rem, 1.5rem + 1.6vw, 2.5rem);  /* 30→40: h1 / term name */
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --leading-normal: 1.6;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* ── Radii ────────────────────────────────────────────────── */
+  --radius-sm: 4px;       /* badges, inputs */
+  --radius-md: 8px;       /* buttons, cards */
+  --radius-lg: 12px;      /* panels, sheets */
+  --radius-pill: 999px;
+
+  /* ── Strokes ──────────────────────────────────────────────── */
+  --stroke-hairline: 1px;
+  --stroke-regular: 2px;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* ── Shadows ──────────────────────────────────────────────── */
+  --color-shadow: light-dark(rgb(27 26 24 / 0.08), rgb(0 0 0 / 0.45));
+  --shadow-1: 0 1px 2px var(--color-shadow);                                            /* resting card */
+  --shadow-2: 0 2px 4px var(--color-shadow), 0 4px 12px var(--color-shadow);            /* hover, popover */
+  --shadow-3: 0 4px 8px var(--color-shadow), 0 12px 32px var(--color-shadow);           /* sheet, modal */
+
+  /* ── Motion ───────────────────────────────────────────────── */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ── Layers ───────────────────────────────────────────────── */
+  --z-sticky: 10;
+  --z-overlay: 20;
+  --z-modal: 30;
+}
+
+/* ── Density by breakpoint ─────────────────────────────────────
+ * Breakpoints (custom properties can't be used in media queries):
+ *   sm ≥ 40rem (640px) · md ≥ 64rem (1024px)
+ * Below 40rem is the 360px-up phone layout. */
+@media (min-width: 40rem) {
+  :root {
+    --gutter: var(--space-5);
+    --stack-gap: var(--space-6);
+    --section-gap: var(--space-8);
+  }
+}
+@media (min-width: 64rem) {
+  :root {
+    --gutter: var(--space-6);
+    --section-gap: var(--space-9);
+  }
+}
+
+/* ── Reduced motion ────────────────────────────────────────────
+ * Durations collapse to 0 so anything built on the motion tokens
+ * becomes instant. The mind map must also skip camera tweens. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+  }
+}
+:root[data-reduced-motion="true"] {
+  --duration-fast: 0ms;
+  --duration-base: 0ms;
+  --duration-slow: 0ms;
+}
