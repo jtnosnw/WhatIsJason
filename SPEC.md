@@ -33,7 +33,7 @@ A learning and discovery site for AI terminology, technologies, workflows and sy
 | Hosting | GitHub Pages | Free, git-native, sufficient for a static site |
 | Content store | Markdown + YAML frontmatter in repo | Version history, reviewable diffs, no read costs |
 | Runtime data | JSON index built by CI | Fast load, structured, validated at build time |
-| Auth | Firebase Auth, Google SSO, `signInWithPopup` | Shared with Global Market Intelligence project |
+| Auth | Firebase Auth, Google SSO, `signInWithPopup` | Dedicated Firebase project `whatisjason-420eb` (Spark plan) |
 | User data | Firestore | Quiz attempts, progress, missed-question queue |
 | Access model | Allowlist soft gate | See §2.1 |
 
@@ -50,7 +50,8 @@ If content ever needs real protection, hosting must move to Firebase Hosting + C
 - Use `signInWithPopup`, **not** `signInWithRedirect`. Redirect routes through `*.firebaseapp.com`, a third-party origin relative to `*.github.io`; browsers block its storage access and the user returns signed-out.
 - Add the Pages domain to Firebase authorised domains.
 - The Firebase web API key is public by design. Restrict by HTTP referrer in Google Cloud Console; rely on Firestore rules for access control.
-- Namespace this app's Firestore collections separately from the Global Market Intelligence dashboard. Scope rules so neither app can read the other's data.
+- **Dedicated project.** Firebase project `whatisjason-420eb` is used only by this app. User data lives in its `(default)` Firestore database, initialised with the bare `getFirestore(app)`.
+- This repo owns `firebase.json`, `.firebaserc` and `firestore.rules`.
 
 ### 2.3 Build pipeline
 

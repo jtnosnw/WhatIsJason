@@ -256,6 +256,8 @@ Build validates that every step's `prerequisite-of` ancestors appear earlier in 
 
 Only user-specific data lives here. No content.
 
+All paths below are in the `(default)` Firestore database of the dedicated `whatisjason-420eb` project (SPEC §2.2).
+
 ```
 users/{uid}
   email, displayName, createdAt, lastSeenAt
@@ -286,7 +288,6 @@ allowlist/{email}           read-only to clients
 - A user reads and writes **only** documents under their own `users/{uid}`.
 - `allowlist` is readable by authenticated users, writable only from the console.
 - No client can write anything outside its own subtree.
-- Collections are namespaced so the Global Market Intelligence app and this app cannot reach each other's data.
 
 ### 5.2 Attempt history
 
