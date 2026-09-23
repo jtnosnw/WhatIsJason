@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <title>WhatIsJason</title>
+    <script>
+      // GitHub Pages SPA fallback (github.com/rafgraph/spa-github-pages).
+      // Pages serves this file for any unknown path. It redirects to the app root
+      // with the requested path encoded in the query string; the script in
+      // index.html decodes it back before the router mounts.
+      // e.g. /WhatIsJason/term/kv-cache → /WhatIsJason/?/term/kv-cache
+      // 1 = keep the "/WhatIsJason" project-site segment (vite.config.ts base).
+      var pathSegmentsToKeep = 1;
+
+      var l = window.location;
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      );
+    </script>
+  </head>
+  <body></body>
+</html>

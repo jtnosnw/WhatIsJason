@@ -22,6 +22,7 @@ If code and these documents disagree, the documents win. If a document is wrong,
 ## Project decisions
 
 - **Hosting:** GitHub Pages project site at `/WhatIsJason/`. Vite `base` and the router basename both use that path. `404.html` hands deep links to the client router.
+- **Deployment:** `.github/workflows/deploy.yml` builds and deploys to Pages on every push to `main`, using the official Actions artifact flow (Pages source: "GitHub Actions"). There's no `gh-pages` branch and no manual `dist/` push. Firebase config reaches the build as repo secrets named `VITE_FIREBASE_*`. Firestore rules are deployed separately with `firebase deploy --only firestore`; CI doesn't deploy them.
 - **Generated data:** the content build writes JSON to `public/data/` (gitignored). Vite copies it to `dist/data/`, and the dev server serves it too. Never write into `dist/` directly, because Vite empties it on every build.
 - **Diagrams:** SVGs live in `content/diagrams/` and are inlined at build time, so they can use token variables and switch with the theme. Never load one through `<img>`.
 - **Type:** system font stacks only. No web fonts.

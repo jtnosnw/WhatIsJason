@@ -1,0 +1,108 @@
+rules_version = '2';
+
+// User data only (CLAUDE.md rule 3). Shapes follow SCHEMA.md §5.
+// Anything not matched below is denied.
+//
+// Each documented path has its own match block rather than a
+// users/{uid}/{document=**} wildcard: rules OR together, so a wildcard
+// owner rule would allow any write and bypass the validation here.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    function isCount(v) {
+      return v is int && v >= 0;
+    }
+
+    function optionalTimestamp(d, field) {
+      return !(field in d) || d[field] is timestamp;
+    }
+
+    // users/{uid}: email, displayName, createdAt, lastSeenAt, prefs
+    function validPrefs(p) {
+      return p is map
+        && p.keys().hasOnly(['depth', 'theme', 'reducedMotion'])
+        && (!('depth' in p) || p.depth in ['plain', 'technical'])
+        && (!('theme' in p) || p.theme is string)
+        && (!('reducedMotion' in p) || p.reducedMotion is bool);
+    }
+
+    function validUser(d) {
+      return d.keys().hasOnly(['email', 'displayName', 'createdAt', 'lastSeenAt', 'prefs'])
+        && (!('email' in d) || d.email is string)
+        && (!('displayName' in d) || d.displayName is string)
+        && optionalTimestamp(d, 'createdAt')
+        && optionalTimestamp(d, 'lastSeenAt')
+        && (!('prefs' in d) || validPrefs(d.prefs));
+    }
+
+    // attempts: three outcomes, never two (SCHEMA §3.3). The counts must add up
+    // to the answers recorded, and to questionCount once the attempt is complete.
+    function validAttempt(d) {
+      return d.keys().hasOnly(['category', 'startedAt', 'completedAt', 'questionCount',
+                               'correct', 'incorrect', 'skipped', 'answers'])
+        && d.keys().hasAll(['category', 'startedAt', 'questionCount',
+                            'correct', 'incorrect', 'skipped', 'answers'])
+        && d.category is string
+        && d.startedAt is timestamp
+        && optionalTimestamp(d, 'completedAt')
+        && d.questionCount is int && d.questionCount > 0
+        && isCount(d.correct) && isCount(d.incorrect) && isCount(d.skipped)
+        && d.answers is list
+        && d.answers.size() == d.correct + d.incorrect + d.skipped
+        && d.correct + d.incorrect + d.skipped <= d.questionCount
+        && (!('completedAt' in d) || d.correct + d.incorrect + d.skipped == d.questionCount);
+    }
+
+    // review: streak counts consecutive correct answers, so it is > 0 exactly
+    // when the last outcome was correct.
+    function validReview(d) {
+      return d.keys().hasOnly(['outcome', 'dueAt', 'streak', 'lastSeenAt'])
+        && d.keys().hasAll(['outcome', 'dueAt', 'streak', 'lastSeenAt'])
+        && d.outcome in ['correct', 'incorrect', 'skipped']
+        && d.dueAt is timestamp
+        && d.lastSeenAt is timestamp
+        && isCount(d.streak)
+        && (d.outcome == 'correct') == (d.streak > 0);
+    }
+
+    function validPathProgress(d) {
+      return d.keys().hasOnly(['startedAt', 'completedStepIndex', 'completedAt'])
+        && d.keys().hasAll(['startedAt'])
+        && d.startedAt is timestamp
+        && (!('completedStepIndex' in d) || isCount(d.completedStepIndex))
+        && optionalTimestamp(d, 'completedAt');
+    }
+
+    match /users/{uid} {
+      allow read, delete: if isOwner(uid);
+      allow create, update: if isOwner(uid) && validUser(request.resource.data);
+
+      match /attempts/{attemptId} {
+        // delete is needed to prune to the last 5 attempts per category (SCHEMA §5.2)
+        allow read, delete: if isOwner(uid);
+        allow create, update: if isOwner(uid) && validAttempt(request.resource.data);
+      }
+
+      match /review/{questionId} {
+        allow read, delete: if isOwner(uid);
+        allow create, update: if isOwner(uid) && validReview(request.resource.data);
+      }
+
+      match /paths/{pathId} {
+        allow read, delete: if isOwner(uid);
+        allow create, update: if isOwner(uid) && validPathProgress(request.resource.data);
+      }
+    }
+
+    // Document ID is the user's email. Managed from the console only.
+    match /allowlist/{email} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+  }
+}
