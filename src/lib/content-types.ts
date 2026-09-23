@@ -106,7 +106,7 @@ export interface QuizQuestion {
   options: QuizOption[]
   explanation: string
   generated: boolean
-  template?: 'prerequisite' | 'component' | 'alternative' | 'domain'
+  template?: 'prerequisite' | 'component' | 'alternative'
 }
 
 export interface Quiz {
