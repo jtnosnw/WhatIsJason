@@ -10,6 +10,9 @@ public/data/
 # Claude
 .claude/
 
+# Screenshots dir
+.screenshots/
+
 # Firebase config and secrets
 # The web API key is public by design (SPEC §2.2), but keep local config out of
 # git so each environment sets its own. Commit .env.example instead.
