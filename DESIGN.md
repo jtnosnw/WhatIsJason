@@ -70,7 +70,9 @@ The layout is designed for phones first, from 360px wide. It has two breakpoints
 | `--gutter` | 16px | 24px | 32px |
 | `--stack-gap` | 24px | 32px | 32px |
 | `--section-gap` | 48px | 64px | 96px |
+| `--card-pad` | 16px | 24px | 24px |
 
+- `--card-pad` is the inner padding of every card, panel, notice and callout. Use it instead of a raw `--space-*` step, so they all get roomier together.
 - Density changes through these semantic tokens. Components don't restate spacing per breakpoint. If a component needs to get roomier, it uses a semantic token, or a new semantic token gets added.
 - The type ramp stays the same at every width, except `--text-2xl`, which scales from 30px to 40px. Long term names have to wrap cleanly at 360px, so test with the longest real term.
 - **Below 640px:** side panels become bottom sheets (the map panel slides up, per SPEC §4.3). Comparison tables become stacked cards or get their own horizontal scroll container. The page body never scrolls sideways.
@@ -94,7 +96,8 @@ The layout is designed for phones first, from 360px wide. It has two breakpoints
 Diagrams follow the same tokens as the rest of the site (SPEC §5).
 
 - **Inline SVG only.** SVGs in `content/diagrams/` are inlined at build time. An SVG loaded through `<img>` can't read CSS variables and won't switch themes.
-- **No colour literals in SVG source.** Use `fill="var(--color-…)"`, `stroke="currentColor"` or classes. The build should reject hex values in diagram files.
+- **No colour literals in SVG source.** Use `fill="var(--color-…)"`, `style="fill: var(--…)"`, `stroke="currentColor"` or classes. Both the attribute and the `style` form resolve and switch with the theme (verified in Chrome). The content build fails on any hex, `rgb()` or `hsl()` in a diagram file.
+- **Size:** a diagram scales to the width of its column, up to `--measure`, so its `viewBox` units, text included, scale with it. Draw at roughly the size it will display, which is about 640 units wide.
 - **Ink:** `--color-text` for labels, `--color-border-strong` for lines and arrows, `--color-surface` or `--color-surface-muted` for box fills.
 - **Emphasis:** a domain colour, only when the diagram is about that domain, used as an outline or tint rather than a solid fill behind text.
 - **Type:** `--font-sans`, sized from the ramp. Labels are at least `--text-xs`.
@@ -117,7 +120,28 @@ Diagrams follow the same tokens as the rest of the site (SPEC §5).
 - **Numbers that line up in columns** (scores, history tables): use `font-variant-numeric: tabular-nums`.
 - Use `--text-sm` for badges and captions. Use `--text-xs` only for legends and fine metadata, never for sentences.
 
-## 7. Radii and elevation
+## 7. Fixed sizes
+
+The `--size-*` tokens are fixed dimensions, not rhythm. Use them for things that are a size rather than a gap:
+
+| Token | Use for |
+|---|---|
+| `--size-icon` / `--size-icon-sm` | Icons beside body text / inside badges. Icons are drawn in `currentColor`. |
+| `--size-dot` | The domain colour dot |
+| `--size-card-min` | Minimum column width in card and related-term grids (`repeat(auto-fill, minmax(min(100%, …), 1fr))`) |
+| `--size-thumb-min` | Minimum video thumbnail width |
+| `--size-search` / `--size-panel` | Preferred search width / maximum popover width |
+| `--size-stat-min` | Minimum width of a quiz score tile |
+
+`--underline-offset` sets the link underline gap. It's in `em`, so it scales with the text.
+
+## 8. Icons and colour channels
+
+- **Type** shows as an icon on a neutral badge (`Icon` names match the six types). **Trend** shows as an arrow icon plus its word.
+- **Quiz outcomes** each have their own shape: a check for correct, a cross for incorrect, and a dashed circle for skipped. Each also has a word and its `--color-outcome-*` colour. Outcome colours are used only in quizzes and review, never for general success or error styling elsewhere. The one exception is `.notice--error`, which borrows the incorrect pair for error notices.
+- **Selected and current** states (nav, chips, the depth toggle, the current path step) use the accent plus a second cue: weight, an inset bar or an attached action.
+
+## 9. Radii and elevation
 
 - Use `--radius-sm` for badges and inputs, `--radius-md` for buttons and cards, `--radius-lg` for panels and sheets, and `--radius-pill` for chips.
 - `--shadow-1` is for cards at rest. `--shadow-2` is for hover and popovers. `--shadow-3` is for sheets and modals. Dark mode shadows are much stronger, so cards in dark mode also need a `--color-border` edge to separate them from the page.

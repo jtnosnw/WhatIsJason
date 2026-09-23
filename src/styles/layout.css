@@ -1,0 +1,113 @@
+/* Page frame: skip link, header, main, footer. Tokens only (DESIGN.md). */
+
+.skip-link {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: var(--z-modal);
+  padding: var(--control-pad-y) var(--control-pad-x);
+  border-radius: var(--radius-md);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: var(--weight-medium);
+  transform: translateY(calc(-100% - var(--space-4)));
+}
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: var(--color-surface);
+  border-bottom: var(--stroke-hairline) solid var(--color-border);
+}
+
+.site-header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-block: var(--space-3);
+}
+
+.site-header__brand {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  text-decoration: none;
+}
+.site-header__brand:hover {
+  color: var(--color-accent);
+}
+
+.site-header__account {
+  margin-left: auto;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.nav__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  padding-inline: var(--control-pad-x);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+}
+.nav__link:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+}
+/* Selected: text colour + an accent bar, never colour alone (DESIGN §4). */
+.nav__link--active {
+  color: var(--color-text);
+  box-shadow: inset 0 calc(-1 * var(--stroke-regular)) 0 var(--color-accent);
+}
+
+/* ── Main ─────────────────────────────────────────────────── */
+
+.page {
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-block: var(--section-gap);
+}
+/* Focus moves here on navigation for screen readers; it's not a control, so no ring. */
+.page:focus {
+  outline: none;
+}
+
+/* ── Footer ───────────────────────────────────────────────── */
+
+.site-footer {
+  border-top: var(--stroke-hairline) solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-block: var(--space-5);
+}

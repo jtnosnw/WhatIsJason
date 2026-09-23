@@ -226,6 +226,8 @@ Three, not two:
 
 Accuracy is reported as `correct / (correct + incorrect)`. Skipped questions are reported separately as "gaps". This distinction is the whole reason the pass option exists — collapsing it into "wrong" would destroy the signal.
 
+Current intervals (`src/lib/review.ts`): skipped 1 day, incorrect 3 days, correct 7 days. A correct answer to a question that isn't in the queue doesn't add it. Two consecutive correct answers remove it. Review sessions update `review/` only; they aren't saved as `attempts/`, so they don't distort category history.
+
 ---
 
 ## 4. Learning paths
@@ -278,6 +280,8 @@ users/{uid}/review/{questionId}
 
 users/{uid}/paths/{pathId}
   startedAt, completedStepIndex, completedAt
+                    completedStepIndex = 0-based index of the furthest step marked done;
+                    absent until the first step is done. completedAt is set with the last step.
 
 allowlist/{email}           read-only to clients
   addedAt, addedBy

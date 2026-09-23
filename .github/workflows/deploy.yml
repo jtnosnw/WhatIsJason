@@ -49,11 +49,8 @@ jobs:
           done
           exit $missing
 
-      # content/ → public/data/ (CLAUDE.md). Skipped until the script exists.
-      - name: Build content
-        run: npm run build:content --if-present
-
-      - name: Build site
+      # Runs build:content (content/ → public/data/, fails on invalid content) first.
+      - name: Build content and site
         run: npm run build
 
       - uses: actions/configure-pages@v6

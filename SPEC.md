@@ -41,6 +41,8 @@ A learning and discovery site for AI terminology, technologies, workflows and sy
 
 Sign-in is a **soft gate**. GitHub Pages serves static files to anyone who requests them, so the built JSON index is technically fetchable without authentication. The gate hides the UI; it does not protect the bytes.
 
+**What the gate covers (v1).** The glossary, search, quizzes and learning paths are open to everyone, signed in or not. Signing in with an allowlisted Google account unlocks saved progress: quiz history, the review queue, path progress and synced preferences. A signed-in account that isn't on the allowlist can use everything, but nothing is saved.
+
 This is accepted and intentional. The glossary content is general AI knowledge, not proprietary. What genuinely needs protecting is **user data** — quiz history and progress — and that is protected properly by Firestore security rules, which are server-enforced.
 
 If content ever needs real protection, hosting must move to Firebase Hosting + Cloud Functions or an edge-middleware host. Do not attempt to solve it client-side.

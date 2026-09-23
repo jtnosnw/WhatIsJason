@@ -1,0 +1,248 @@
+/* Page-specific layout. Tokens only (DESIGN.md). */
+
+/* ── Browse ───────────────────────────────────────────────── */
+
+.page-intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.filters__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+}
+
+.domain-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.domain-group__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.domain-group__count {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-muted);
+}
+
+/* ── Entry ────────────────────────────────────────────────── */
+
+.entry__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.entry__term {
+  overflow-wrap: anywhere;
+}
+
+.entry__aliases {
+  color: var(--color-text-muted);
+}
+
+.entry__explanation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--card-pad);
+  border: var(--stroke-hairline) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.diagram {
+  margin: 0;
+  color: var(--color-text);
+}
+.diagram__svg svg {
+  display: block;
+  width: 100%;
+  max-width: var(--measure);
+  height: auto;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+}
+.facts dt {
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+}
+.facts dd {
+  margin: 0;
+}
+
+.related {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.related__groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--size-card-min)), 1fr));
+  gap: var(--space-5);
+}
+
+.related__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.related__label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+}
+
+.related__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: 0;
+  list-style: none;
+}
+
+.related__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap-target);
+}
+
+.related__note {
+  padding-left: calc(var(--size-icon) + var(--space-2));
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--size-thumb-min)), 1fr));
+  gap: var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.video {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--color-text);
+  text-decoration: none;
+}
+.video:hover .video__title {
+  text-decoration: underline;
+}
+
+.video__thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+}
+
+.video__title {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  font-weight: var(--weight-medium);
+}
+
+.entry__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  padding-top: var(--space-4);
+  border-top: var(--stroke-hairline) solid var(--color-border);
+}
+
+.stale-marker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* ── Learning paths ───────────────────────────────────────── */
+
+.path-done {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--weight-semibold);
+}
+
+.path-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.path-step {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--card-pad);
+  border: var(--stroke-hairline) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+/* Current step: accent edge plus its "Mark as done" button, not colour alone. */
+.path-step--current {
+  border-color: var(--color-accent);
+  box-shadow: inset var(--stroke-regular) 0 0 var(--color-accent);
+}
+
+.path-step__marker {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-target);
+  height: var(--tap-target);
+  border: var(--stroke-hairline) solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+.path-step--done .path-step__marker {
+  border-color: var(--color-text);
+  background: var(--color-text);
+  color: var(--color-surface);
+}
+
+.path-step__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.path-step__title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--weight-semibold);
+}

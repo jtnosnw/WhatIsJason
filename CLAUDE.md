@@ -10,6 +10,13 @@ A learning and discovery site for AI terminology. Static React app on GitHub Pag
 
 If code and these documents disagree, the documents win. If a document is wrong, change the document in the same change as the code. Don't let them drift. If something isn't covered, ask; don't invent a convention.
 
+## Commands
+
+- `npm run dev`: builds content, then starts Vite. Re-run `npm run build:content` after editing `content/`.
+- `npm run build:content`: validates `content/` (SCHEMA §7) and writes `public/data/*.json`. It fails on errors and lists warnings.
+- `npm run build`: content, then type-check, then the Vite production build. CI runs this.
+- `npm run lint`
+
 ## Non-negotiable rules
 
 1. **Design tokens only.** Every colour, spacing value, font size, radius, shadow and duration comes from a `var(--…)` defined in `src/styles/tokens.css`. Never hardcode a hex, `rgb()`, `px` or `rem` value for colour or spacing in a component, stylesheet or diagram. If a value you need is missing, add a token (and document it in DESIGN.md). Don't inline it.
@@ -28,6 +35,6 @@ If code and these documents disagree, the documents win. If a document is wrong,
 - **Type:** system font stacks only. No web fonts.
 - **Firebase:** project `whatisjason-420eb` (Spark plan), web app "WhatIsJason". Config comes from `VITE_FIREBASE_*` env vars (see `.env.example`). No Analytics.
 - **Dedicated project:** the Firebase project is used only by WhatIsJason. There's no shared Auth, API key or authorised-domain list to coordinate with another app. This repo owns `firebase.json`, `.firebaserc` and `firestore.rules`.
-- **Access model:** sign-in is a soft gate that hides the UI; it does not protect the content. Never put anything sensitive in `content/` (SPEC §2.1).
+- **Access model:** sign-in is a soft gate that hides the UI; it does not protect the content. In v1 it gates saved progress only. The glossary, search and quizzes never wait on or require sign-in (SPEC §2.1). Never put anything sensitive in `content/` (SPEC §2.1).
 - **Domain is the only colour channel.** Entry `type` is shown as an icon on a neutral badge, not a colour. Adoption and trend badges are neutral too.
 - **Colour is never the only signal.** Domain colours, quiz outcomes and relationship types always come with a text label, an icon or a shape difference.

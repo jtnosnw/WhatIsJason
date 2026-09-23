@@ -98,9 +98,20 @@
   --section-gap: var(--space-7);     /* between page sections */
   --control-pad-y: var(--space-2);
   --control-pad-x: var(--space-3);
+  --card-pad: var(--space-4);        /* inner padding of cards and panels */
   --tap-target: 2.75rem;             /* 44px minimum hit area */
   --measure: 68ch;                   /* max line length for prose */
   --page-max: 72rem;
+
+  /* ── Sizes (fixed dimensions, not rhythm) ─────────────────── */
+  --size-icon: 1.125rem;             /* 18: icons beside body text */
+  --size-icon-sm: 0.875rem;          /* 14: icons inside badges */
+  --size-dot: 0.625rem;              /* 10: domain colour dot */
+  --size-card-min: 17rem;            /* min column width in card grids */
+  --size-thumb-min: 14rem;           /* min video thumbnail width */
+  --size-search: 16rem;              /* preferred search field width */
+  --size-panel: 32rem;               /* search results, popovers */
+  --size-stat-min: 9rem;             /* min width of a score tile */
 
   /* ── Type ─────────────────────────────────────────────────── */
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -113,6 +124,8 @@
   --text-lg: 1.375rem;    /* 22: h3 */
   --text-xl: 1.75rem;     /* 28: h2 */
   --text-2xl: clamp(1.875rem, 1.5rem + 1.6vw, 2.5rem);  /* 30→40: h1 / term name */
+
+  --underline-offset: 0.15em;          /* link underline gap, scales with the text */
 
   --leading-tight: 1.2;
   --leading-snug: 1.35;
@@ -161,6 +174,7 @@
     --gutter: var(--space-5);
     --stack-gap: var(--space-6);
     --section-gap: var(--space-8);
+    --card-pad: var(--space-5);
   }
 }
 @media (min-width: 64rem) {
