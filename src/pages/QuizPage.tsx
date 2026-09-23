@@ -2,6 +2,7 @@ import { useCallback, useId, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { ProgressGate } from '../components/Account.tsx'
 import { DomainDot } from '../components/Badges.tsx'
+import { Breadcrumb } from '../components/Breadcrumb.tsx'
 import { QuizHistory } from '../components/QuizHistory.tsx'
 import { SaveStatus } from '../components/SaveStatus.tsx'
 import { useProgress, useUser } from '../lib/user.tsx'
@@ -42,10 +43,13 @@ export function QuizPage() {
     [done, saveQuiz],
   )
 
+  const quizTitle = (cat: string) => cat === 'all' ? 'Mixed quiz' : `${domainLabel(cat)} quiz`
+
   if (phase.name === 'playing') {
     return (
       <div className="stack quiz-page">
-        <h1>{phase.category === 'all' ? 'Mixed quiz' : `${domainLabel(phase.category)} quiz`}</h1>
+        <Breadcrumb items={[{ label: 'Quiz', onClick: () => setPhase({ name: 'setup' }) }, { label: quizTitle(phase.category) }]} />
+        <h1>{quizTitle(phase.category)}</h1>
         <QuizSession
           key={phase.questions.map(q => q.id).join()}
           questions={phase.questions}
@@ -58,7 +62,8 @@ export function QuizPage() {
   if (phase.name === 'done') {
     return (
       <div className="stack quiz-page">
-        <h1>{phase.category === 'all' ? 'Mixed quiz' : `${domainLabel(phase.category)} quiz`}</h1>
+        <Breadcrumb items={[{ label: 'Quiz', onClick: () => setPhase({ name: 'setup' }) }, { label: quizTitle(phase.category) }]} />
+        <h1>{quizTitle(phase.category)}</h1>
         <QuizResults
           result={phase.result}
           status={<SaveStatus save={saveResult} what="save this result and add your gaps to a review queue" />}

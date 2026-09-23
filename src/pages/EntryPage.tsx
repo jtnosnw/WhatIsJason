@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router'
 import { AdoptionBadge, DomainBadge, TrendBadge, TypeBadge } from '../components/Badges.tsx'
+import { Breadcrumb } from '../components/Breadcrumb.tsx'
 import { Icon } from '../components/Icon.tsx'
 import { RichText } from '../components/RichText.tsx'
 import { useContent } from '../lib/content.tsx'
@@ -25,6 +26,7 @@ function EntryView({ entry }: { entry: Entry }) {
 
   return (
     <article className="entry stack">
+      <Breadcrumb items={[{ label: 'Browse', to: '/' }, { label: entry.term }]} />
       <header className="entry__header">
         <h1 className="entry__term">{entry.term}</h1>
         {entry.aliases.length > 0 && (

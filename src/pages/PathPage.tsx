@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { ProgressGate } from '../components/Account.tsx'
 import { DomainDot } from '../components/Badges.tsx'
+import { Breadcrumb } from '../components/Breadcrumb.tsx'
 import { Icon } from '../components/Icon.tsx'
 import { useContent } from '../lib/content.tsx'
 import type { LearningPath } from '../lib/content-types.ts'
@@ -48,8 +49,8 @@ function PathView({ path }: { path: LearningPath }) {
 
   return (
     <div className="stack">
+      <Breadcrumb items={[{ label: 'Paths', to: '/paths' }, { label: path.title }]} />
       <header className="page-intro">
-        <p className="meta"><Link to="/paths">Learning paths</Link></p>
         <h1>{path.title}</h1>
         <p className="lead">{path.description}</p>
         <div className="badge-row">

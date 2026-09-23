@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { ProgressGate } from '../components/Account.tsx'
+import { Breadcrumb } from '../components/Breadcrumb.tsx'
 import { OutcomeLabel } from '../components/Outcome.tsx'
 import { QuizResults } from '../components/QuizResults.tsx'
 import { QuizSession, type SessionResult } from '../components/QuizSession.tsx'
@@ -25,6 +26,7 @@ export function ReviewPage() {
 
   return (
     <div className="stack quiz-page">
+      <Breadcrumb items={[{ label: 'Quiz', to: '/quiz' }, { label: 'Review your gaps' }]} />
       <header className="page-intro">
         <h1>Review your gaps</h1>
         <p className="lead">

@@ -503,31 +503,6 @@ for (const e of edges) {
   }
 }
 
-const domainLabel = (d: string) => d.charAt(0).toUpperCase() + d.slice(1)
-for (const e of entries) {
-  const qid = `gen-domain-${e.id}`
-  if (suppressed(e.id)) continue
-  const wrong = seededShuffle(taxonomy.domains.filter(d => !e.domains.includes(d)), qid).slice(0, 3)
-  if (wrong.length < 3) continue
-  const others = e.domains.slice(1).map(domainLabel)
-  questionIds.add(qid)
-  questions.push({
-    id: qid,
-    entry: e.id,
-    category: e.domains[0],
-    difficulty: 1,
-    kind: 'definition',
-    prompt: `Which domain does ${e.term} primarily belong to?`,
-    options: seededShuffle([
-      { text: domainLabel(e.domains[0]), correct: true },
-      ...wrong.map(d => ({ text: domainLabel(d) })),
-    ], `${qid}:order`),
-    explanation: `${e.term} sits in ${domainLabel(e.domains[0])}${others.length ? `, and also touches ${others.join(' and ')}` : ''}. ${e.summary}`,
-    generated: true,
-    template: 'domain',
-  })
-}
-
 // ── Learning paths (SCHEMA §4) ─────────────────────────────────────────────
 
 const paths: LearningPath[] = []
