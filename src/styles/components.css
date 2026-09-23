@@ -1,5 +1,31 @@
 /* Shared components. Tokens only (DESIGN.md). */
 
+/* ── Progress ring ────────────────────────────────────────── */
+
+.progress-ring {
+  flex-shrink: 0;
+}
+
+.progress-ring__fill {
+  transition: stroke-dashoffset var(--duration-slow) var(--ease-standard);
+}
+
+/* SVG text inherits CSS custom properties fine; font-size is in root px units
+   which map 1:1 to the SVG coordinate space when width/height match viewBox. */
+.progress-ring__label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  fill: var(--color-text);
+  font-family: var(--font-sans);
+}
+
+/* ── Sparkline ────────────────────────────────────────────── */
+
+.sparkline {
+  flex-shrink: 0;
+  overflow: visible;
+}
+
 /* ── Breadcrumb ───────────────────────────────────────────── */
 
 .breadcrumb {

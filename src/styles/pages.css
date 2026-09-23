@@ -185,6 +185,12 @@
 
 /* ── Learning paths ───────────────────────────────────────── */
 
+.path-progress-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
 .path-done {
   display: inline-flex;
   align-items: center;

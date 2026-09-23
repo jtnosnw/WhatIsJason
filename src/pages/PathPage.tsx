@@ -4,6 +4,7 @@ import { ProgressGate } from '../components/Account.tsx'
 import { DomainDot } from '../components/Badges.tsx'
 import { Breadcrumb } from '../components/Breadcrumb.tsx'
 import { Icon } from '../components/Icon.tsx'
+import { ProgressRing } from '../components/ProgressRing.tsx'
 import { useContent } from '../lib/content.tsx'
 import type { LearningPath } from '../lib/content-types.ts'
 import { AUDIENCE_LABEL, domainLabel } from '../lib/format.ts'
@@ -71,8 +72,19 @@ function PathView({ path }: { path: LearningPath }) {
       {progress ? (
         <div className="section">
           {!prog && <div><button type="button" className="btn btn--primary" onClick={start} disabled={busy}>Start this path</button></div>}
-          {prog?.completedAt && <p className="path-done"><Icon name="correct" />You've finished this path.</p>}
-          {prog && !prog.completedAt && <p className="meta">{lastDone + 1} of {path.steps.length} steps done. Pick up at step {current + 1}.</p>}
+          {prog && (
+            <div className="path-progress-row">
+              <ProgressRing
+                value={prog.completedAt ? 1 : (lastDone + 1) / path.steps.length}
+                color={prog.completedAt ? 'var(--color-outcome-correct)' : 'var(--color-accent)'}
+              />
+              <div>
+                {prog.completedAt
+                  ? <p className="path-done"><Icon name="correct" />You've finished this path.</p>
+                  : <p className="meta">{lastDone + 1} of {path.steps.length} steps done. Pick up at step {current + 1}.</p>}
+              </div>
+            </div>
+          )}
           {error && <p className="notice notice--error" role="alert">Couldn't save your progress: {error}</p>}
         </div>
       ) : (

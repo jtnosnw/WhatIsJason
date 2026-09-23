@@ -3,6 +3,7 @@ import { domainLabel, formatDateTime, formatDuration } from '../lib/format.ts'
 import { accuracy, formatAccuracy } from '../lib/quiz.ts'
 import type { Attempt } from '../lib/userData.ts'
 import { Icon } from './Icon.tsx'
+import { Sparkline } from './Sparkline.tsx'
 
 // SPEC §4.6: last 5 attempts per category, comparable, with score trend and time.
 
@@ -18,9 +19,20 @@ export function QuizHistory({ attempts }: { attempts: Attempt[] }) {
         const rows = attempts
           .filter(a => a.category === cat)
           .sort((a, b) => b.completedAt.getTime() - a.completedAt.getTime())
+        // Sparkline values: oldest → newest so the trend reads left-to-right
+        const sparkValues = rows.slice().reverse().map(a => accuracy(a) ?? 0)
+        const latest = accuracy(rows[0])
         return (
           <section key={cat} className="section" aria-labelledby={`history-${cat}`}>
-            <h3 id={`history-${cat}`}>{cat === 'all' ? 'Mixed' : domainLabel(cat)}</h3>
+            <div className="history-section__head">
+              <h3 id={`history-${cat}`}>{cat === 'all' ? 'Mixed' : domainLabel(cat)}</h3>
+              <div className="history-section__stats">
+                <Sparkline values={sparkValues} />
+                <span className="meta" aria-label={`Latest accuracy: ${formatAccuracy(latest)}`}>
+                  {formatAccuracy(latest)}
+                </span>
+              </div>
+            </div>
             <div className="table-scroll">
               <table className="history-table">
                 <thead>
